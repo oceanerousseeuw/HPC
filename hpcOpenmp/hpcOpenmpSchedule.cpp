@@ -38,20 +38,28 @@ int main(int argc, char ** argv)
 
     // compute image data
     // TODO
+    double t0 = omp_get_wtime();
+    //#pragma omp parallel for schedule(static, 50) num_threads(3)
     for (int x=0; x<width; x++)
     {
+        #pragma omp parallel for schedule(static, 50) num_threads(3)
         for (int y=0; y<height; y++)
         {
             // diagonal gradient
             // TODO remove that
-            double t = (x+y) / sqrt(width*width + height*height);
+            /*double t = (x+y) / sqrt(width*width + height*height);
             double f = 2.0;
-            ind(x,y) = 127.0 * (1 + cos(2.0*M_PI*f*t));
+            ind(x,y) = 127.0 * (1 + cos(2.0*M_PI*f*t));*/
 
             // put the color of the thread
             // TODO
+            ind(x,y) = 127.0 * omp_get_thread_num();            
         }
     }
+
+    double t1 = omp_get_wtime();
+    std::cout << "time : " << t1 - t0 << std::endl;
+
 
     // stop chrono
     double endTime = omp_get_wtime();

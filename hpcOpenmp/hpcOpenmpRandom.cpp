@@ -55,6 +55,12 @@ int main(int argc, char ** argv)
 	    // compute image parallely
 	    // shared RNG
 	    // TODO
+        std::mt19937 engine(0);
+        std::uniform_int_distribution<int> distribution(0, 255);
+        #pragma omp parallel for
+        for (int x=0; x<width; x++)
+            for (int y=0; y<height; y++)
+                ind(data2,x,y) = distribution(engine);
     }
     double endTime2 = omp_get_wtime();
     double deltaTime2 = endTime2 - startTime2;
@@ -66,6 +72,16 @@ int main(int argc, char ** argv)
 	    // compute image parallely
 	    // private RNG, same seed
 	    // TODO
+        #pragma omp parallel
+        {
+            std::mt19937 engine(0);
+            std::uniform_int_distribution<int> distribution(0, 255);
+            #pragma omp for
+            for (int x=0; x<width; x++)
+                for (int y=0; y<height; y++)
+                    ind(data3,x,y) = distribution(engine);
+        }
+        
     }
     double endTime3 = omp_get_wtime();
     double deltaTime3 = endTime3 - startTime3;
@@ -73,11 +89,18 @@ int main(int argc, char ** argv)
     // compute data4
     std::vector<unsigned char> data4(width*height);
     double startTime4 = omp_get_wtime();
-#pragma omp parallel
+    #pragma omp parallel
     {
 	    // compute image parallely
 	    // private RNG, different seed
 	    // TODO
+        std::mt19937 engine(omp_get_thread_num());
+        std::uniform_int_distribution<int> distribution(0, 255);
+        #pragma omp for
+        for (int x=0; x<width; x++)
+            for (int y=0; y<height; y++)
+                ind(data4,x,y) = distribution(engine);
+
     }
     double endTime4 = omp_get_wtime();
     double deltaTime4 = endTime4 - startTime4;
