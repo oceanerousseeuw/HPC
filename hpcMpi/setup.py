@@ -23,5 +23,6 @@ setup(
         'scripts/hpcMpiIntegralRun.sh',
         'scripts/hpcMpiIntegralSeq.py',
         'scripts/hpcMpiHello2.py',
-        'scripts/hpcMpiHello1.py']
+        'scripts/hpcMpiHello1.py',
+        'scripts/hpcMpiIntegralPar.py']
 )
